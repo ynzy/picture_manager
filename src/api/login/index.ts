@@ -12,7 +12,15 @@ export function getLoginCodeApi() {
 /** 登录并返回 Token */
 export function loginApi(data: Login.LoginRequestData) {
   return request<Login.LoginResponseData>({
-    url: "users/login",
+    url: "user/login",
+    method: "post",
+    data
+  })
+}
+/** 登录并返回 Token */
+export function loginUpApi(data: Login.LoginRequestData) {
+  return request<Login.LoginResponseData>({
+    url: "user/save",
     method: "post",
     data
   })

@@ -35,10 +35,14 @@ export default (configEnv: ConfigEnv): UserConfigExport => {
       /** 接口代理 */
       proxy: {
         "/api/v1": {
-          target: "https://mock.mengxuegu.com/mock/63218b5fb4c53348ed2bc212",
+          target: "http://127.0.0.1:4523/m1/3899770-0-default",
           ws: true,
           /** 是否允许跨域 */
-          changeOrigin: true
+          changeOrigin: true,
+          // 去除路径前缀
+          rewrite: (path: string) => {
+            return path.replace(/^\/api\/v1/, "")
+          }
         }
       },
       /** 预热常用文件，提高初始页面加载速度 */

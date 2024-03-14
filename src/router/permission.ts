@@ -31,15 +31,17 @@ router.beforeEach(async (to, _from, next) => {
   if (to.path === "/login") {
     return next({ path: "/" })
   }
+  next()
 
   // 如果用户已经获得其权限角色
   if (userStore.roles.length !== 0) return next()
 
   // 否则要重新获取权限角色
   try {
-    await userStore.getInfo()
+    // await userStore.getInfo()
     // 注意：角色必须是一个数组！ 例如: ["admin"] 或 ["developer", "editor"]
-    const roles = userStore.roles
+    // const roles = userStore.roles
+    const roles = ["admin"]
     // 生成可访问的 Routes
     routeSettings.dynamic ? permissionStore.setRoutes(roles) : permissionStore.setAllRoutes()
     // 将 "有访问权限的动态路由" 添加到 Router 中

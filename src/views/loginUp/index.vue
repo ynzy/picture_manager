@@ -7,8 +7,8 @@ import { User, Lock, Key, Picture, Loading } from "@element-plus/icons-vue"
 import { getLoginCodeApi } from "@/api/login"
 import { type LoginRequestData } from "@/api/login/types/login"
 import ThemeSwitch from "@/components/ThemeSwitch/index.vue"
-import Owl from "./components/Owl.vue"
-import { useFocus } from "./hooks/useFocus"
+import Owl from "../login/components/Owl.vue"
+import { useFocus } from "../login/hooks/useFocus"
 
 const router = useRouter()
 const { isFocus, handleBlur, handleFocus } = useFocus()
@@ -22,9 +22,9 @@ const loading = ref(false)
 const codeUrl = ref("")
 /** 登录表单数据 */
 const loginFormData: LoginRequestData = reactive({
-  username: "",
-  password: ""
-  // code: ""
+  username: "admin",
+  password: "12345678",
+  code: ""
 })
 /** 登录表单校验规则 */
 const loginFormRules: FormRules = {
@@ -32,8 +32,8 @@ const loginFormRules: FormRules = {
   password: [
     { required: true, message: "请输入密码", trigger: "blur" },
     { min: 3, max: 16, message: "长度在 3 到 16 个字符", trigger: "blur" }
-  ],
-  code: [{ required: true, message: "请输入验证码", trigger: "blur" }]
+  ]
+  // code: [{ required: true, message: "请输入验证码", trigger: "blur" }]
 }
 /** 登录逻辑 */
 const handleLogin = () => {
@@ -41,9 +41,11 @@ const handleLogin = () => {
     if (valid) {
       loading.value = true
       useUserStore()
-        .login(loginFormData)
+        .loginUp(loginFormData)
         .then(() => {
-          router.push({ path: "/" })
+          console.log("注册成功")
+
+          router.push({ path: "/login" })
         })
         .catch(() => {
           // createCode()
@@ -105,35 +107,9 @@ const createCode = () => {
               @focus="handleFocus"
             />
           </el-form-item>
-          <!-- <el-form-item prop="code">
-            <el-input
-              v-model.trim="loginFormData.code"
-              placeholder="验证码"
-              type="text"
-              tabindex="3"
-              :prefix-icon="Key"
-              maxlength="7"
-              size="large"
-            >
-              <template #append>
-                <el-image :src="codeUrl" @click="createCode" draggable="false">
-                  <template #placeholder>
-                    <el-icon>
-                      <Picture />
-                    </el-icon>
-                  </template>
-                  <template #error>
-                    <el-icon>
-                      <Loading />
-                    </el-icon>
-                  </template>
-                </el-image>
-              </template>
-            </el-input>
-          </el-form-item> -->
-          <el-button :loading="loading" type="primary" size="large" @click.prevent="handleLogin">登 录</el-button>
+          <el-button :loading="loading" type="primary" size="large" @click.prevent="handleLogin">注 册</el-button>
           <div>
-            <router-link to="/loginUp">去注册</router-link>
+            <router-link to="/login">去登陆</router-link>
           </div>
         </el-form>
       </div>
