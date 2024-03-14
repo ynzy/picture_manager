@@ -99,5 +99,8 @@
     "ts",
     "typescript"
   ],
-  "license": "MIT"
+  "license": "MIT",
+  "volta": {
+    "node": "20.11.1"
+  }
 }
