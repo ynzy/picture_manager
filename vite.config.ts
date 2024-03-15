@@ -35,7 +35,7 @@ export default (configEnv: ConfigEnv): UserConfigExport => {
       /** 接口代理 */
       proxy: {
         "/api/v1": {
-          target: "http://127.0.0.1:4523/m1/3899770-0-default",
+          target: "http://127.0.0.1:4523/m1/4164530-0-default",
           ws: true,
           /** 是否允许跨域 */
           changeOrigin: true,

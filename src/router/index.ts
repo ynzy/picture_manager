@@ -140,6 +140,36 @@ export const constantRoutes: RouteRecordRaw[] = [
     ]
   },
   {
+    path: "/picture",
+    component: Layouts,
+    redirect: "/picture/list",
+    name: "Picture",
+    meta: {
+      title: "图片管理",
+      elIcon: "Grid"
+    },
+    children: [
+      {
+        path: "list",
+        component: () => import("@/views/picture/list/index.vue"),
+        name: "List",
+        meta: {
+          title: "图片列表",
+          keepAlive: true
+        }
+      }
+      // {
+      //   path: "list2",
+      //   component: () => import("@/views/picture/list/index.vue"),
+      //   name: "List2",
+      //   meta: {
+      //     title: "图片列表2",
+      //     keepAlive: true
+      //   }
+      // }
+    ]
+  },
+  {
     path: "/menu",
     component: Layouts,
     redirect: "/menu/menu1",
