@@ -18,6 +18,7 @@
     "build:prod": "vite build",
     "preview:stage": "pnpm build:stage && vite preview",
     "preview:prod": "pnpm build:prod && vite preview",
+    "preview": "vite preview",
     "lint:eslint": "eslint --cache --max-warnings 0 \"{src,tests,types}/**/*.{vue,js,jsx,ts,tsx}\" --fix",
     "lint:prettier": "prettier --write \"{src,tests,types}/**/*.{vue,js,jsx,ts,tsx,json,css,less,scss,html,md}\"",
     "lint": "pnpm lint:eslint && pnpm lint:prettier",
@@ -101,6 +102,6 @@
   ],
   "license": "MIT",
   "volta": {
-    "node": "20.11.1"
+    "node": "18.17.0"
   }
 }
