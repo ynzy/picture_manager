@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { getFilePage, removeFile, downFile, fileArchives } from "@/api/pictrue"
 import { useUserStore } from "@/store/modules/user"
-import { onMounted, ref } from "vue"
+import { onMounted, ref, watch } from "vue"
 import CreateDirDialog from "./createDirDialog.vue"
 import UploadButton from "./UploadButton.vue"
 import { Refresh } from "@element-plus/icons-vue"
@@ -15,6 +15,11 @@ const useUser = useUserStore()
 
 const dirIdPath = ref([])
 
+const date = ref({
+  startTime: "",
+  endTime: ""
+})
+
 const params = ref({
   userid: "",
   parentId: 0,
@@ -23,6 +28,19 @@ const params = ref({
   startTime: "",
   endTime: ""
 })
+
+watch(
+  () => date.value.startTime,
+  (v) => {
+    params.value.startTime = dayjs(v).valueOf()
+  }
+)
+watch(
+  () => date.value.endTime,
+  (v) => {
+    params.value.endTime = dayjs(v).valueOf()
+  }
+)
 
 const handleBackPath = () => {
   console.log("dirIdPath.value", dirIdPath.value)
@@ -135,6 +153,10 @@ const resetSearch = () => {
     startTime: "",
     endTime: ""
   }
+  date.value = {
+    startTime: "",
+    endTime: ""
+  }
   params.value = { ...params.value, ...defaultValue }
   getList()
 }
@@ -164,11 +186,11 @@ onMounted(() => {
           <el-input v-model="params.shutterSpeedValue" placeholder="请输入" />
         </el-form-item>
         <el-form-item prop="startTime" label="开始时间">
-          <el-date-picker v-model="params.startTime" type="date" placeholder="开始时间" />
+          <el-date-picker v-model="date.startTime" type="date" placeholder="开始时间" />
           <!-- <el-input v-model="params.startTime" placeholder="请输入" /> -->
         </el-form-item>
         <el-form-item prop="endTime" label="结束时间">
-          <el-date-picker v-model="params.endTime" type="date" placeholder="结束时间" />
+          <el-date-picker v-model="date.endTime" type="date" placeholder="结束时间" />
           <!-- <el-input v-model="params.endTime" placeholder="请输入" /> -->
         </el-form-item>
         <el-form-item>
