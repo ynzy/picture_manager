@@ -241,7 +241,7 @@ onMounted(() => {
       <el-table-column label="操作" width="300">
         <template v-slot="{ row }">
           <el-button type="danger" size="small" @click="handleDelete(row)">删除</el-button>
-          <el-button v-if="isPreview(row)" type="primary" size="small" @click="handlePreview(row)">预览</el-button>
+          <!-- <el-button v-if="isPreview(row)" type="primary" size="small" @click="handlePreview(row)">预览</el-button> -->
           <el-button v-if="row.folder !== 1" type="primary" size="small" @click="handleDown(row)">下载</el-button>
           <el-button v-if="row.folder !== 1" @click="handleFileArchives(row)">归档</el-button>
         </template>
