@@ -139,6 +139,13 @@ const resetSearch = () => {
   getList()
 }
 
+const previewUrlNew = ref("")
+const previewVisible = ref(false)
+const handlePreviewUrl = (url) => {
+  previewUrlNew.value = url
+  previewVisible.value = true
+}
+
 onMounted(() => {
   // console.log(useUser.userInfo)
   dirIdPath.value.push(params.value.parentId)
@@ -200,8 +207,7 @@ onMounted(() => {
       </el-table-column>
       <el-table-column label="图片">
         <template v-slot="{ row }">
-          <el-image v-if="isPreview(row)" :src="row.fileUrl" :zoom-rate="1.2" :max-scale="7" :min-scale="0.2"
-            :preview-src-list="[row.fileUrl]" :initial-index="4" fit="cover" />
+          <el-image v-if="isPreview(row)" :src="row.fileUrl" @click="handlePreviewUrl(row.fileUrl)" />
           <div class="text_url" v-else-if="row.folder !== 1">{{ row.fileUrl }}</div>
           <div v-else>暂无</div>
         </template>
@@ -221,6 +227,11 @@ onMounted(() => {
     </el-table>
     <CreateDirDialog v-model:visible="dirDialogVisible" :params="params" @updateList="getList" />
     <UploadButton v-model:visible="uploadDialogVisible" :params="params" @updateList="getList" />
+    <el-dialog v-model="previewVisible" width="500">
+      <div>
+        <img style="width: 100%; height: 100%" :src="previewUrlNew" alt="" />
+      </div>
+    </el-dialog>
   </div>
 </template>
 <style lang="scss" scoped>
