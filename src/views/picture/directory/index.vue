@@ -4,6 +4,7 @@ import { useUserStore } from "@/store/modules/user"
 import { onMounted, ref } from "vue"
 import CreateDirDialog from "./createDirDialog.vue"
 import UploadButton from "./UploadButton.vue"
+import { Refresh } from "@element-plus/icons-vue"
 
 import dayjs from "dayjs"
 
@@ -16,7 +17,11 @@ const dirIdPath = ref([])
 
 const params = ref({
   userid: "",
-  parentId: 0
+  parentId: 0,
+  apertureValue: "",
+  shutterSpeedValue: "",
+  startTime: "",
+  endTime: ""
 })
 
 const handleBackPath = () => {
@@ -103,6 +108,36 @@ const handleDown = async (row) => {
   document.body.removeChild(link)
   window.URL.revokeObjectURL(url)
 }
+const regex = /\.(jpg|jpeg|png|gif)$/i
+
+const isPreview = (row) => {
+  return regex.test(row.fileName)
+}
+
+const previewUrl = ref("")
+
+const handlePreview = async (row) => {
+  const { fileName, bucketName } = row
+  const res = await fileSee({ fileName, bucketName })
+  if (res.statusCode == 200) {
+    previewUrl.value = res.data
+  }
+}
+
+const handleSearch = () => {
+  getList()
+}
+
+const resetSearch = () => {
+  const defaultValue = {
+    apertureValue: "",
+    shutterSpeedValue: "",
+    startTime: "",
+    endTime: ""
+  }
+  params.value = { ...params.value, ...defaultValue }
+  getList()
+}
 
 onMounted(() => {
   // console.log(useUser.userInfo)
@@ -113,6 +148,28 @@ onMounted(() => {
 </script>
 <template>
   <div>
+    <el-card shadow="never" class="search-wrapper">
+      <el-form ref="searchFormRef" :inline="true" :model="params">
+        <el-form-item prop="apertureValue" label="光圈值">
+          <el-input v-model="params.apertureValue" placeholder="请输入" />
+        </el-form-item>
+        <el-form-item prop="shutterSpeedValue" label="快门速度">
+          <el-input v-model="params.shutterSpeedValue" placeholder="请输入" />
+        </el-form-item>
+        <el-form-item prop="startTime" label="开始时间">
+          <el-date-picker v-model="params.startTime" type="date" placeholder="开始时间" />
+          <!-- <el-input v-model="params.startTime" placeholder="请输入" /> -->
+        </el-form-item>
+        <el-form-item prop="endTime" label="结束时间">
+          <el-date-picker v-model="params.endTime" type="date" placeholder="结束时间" />
+          <!-- <el-input v-model="params.endTime" placeholder="请输入" /> -->
+        </el-form-item>
+        <el-form-item>
+          <el-button type="primary" :icon="Search" @click="handleSearch">查询</el-button>
+          <el-button :icon="Refresh" @click="resetSearch">重置</el-button>
+        </el-form-item>
+      </el-form>
+    </el-card>
     <div class="dirpath_container">
       <el-button @click="handleBackPath">返回上一级</el-button>
       <el-button @click="addUpload">上传文件</el-button>
@@ -127,7 +184,7 @@ onMounted(() => {
     <el-table :data="tableData" style="width: 100%" @row-dblclick="handleRowDblclick">
       <!-- <el-table-column type="selection" width="55px" /> -->
       <el-table-column prop="fileName" label="文件名" />
-      <el-table-column prop="createTime" label="修改时间">
+      <el-table-column prop="createTime" label="创建时间">
         <template v-slot="scope">
           {{ dateformat(scope.row) }}
         </template>
@@ -141,13 +198,22 @@ onMounted(() => {
       <el-table-column prop="size" label="大小">
         <template v-slot="scope"> {{ scope.row.size || "-" }} </template>
       </el-table-column>
+      <el-table-column label="图片">
+        <template v-slot="{ row }">
+          <el-image v-if="isPreview(row)" :src="row.fileUrl" :zoom-rate="1.2" :max-scale="7" :min-scale="0.2"
+            :preview-src-list="[row.fileUrl]" :initial-index="4" fit="cover" />
+          <div class="text_url" v-else-if="row.folder !== 1">{{ row.fileUrl }}</div>
+          <div v-else>暂无</div>
+        </template>
+      </el-table-column>
       <el-table-column prop="apertureValue" label="光圈值" />
       <el-table-column prop="originalTime" label="原始日期" />
       <el-table-column prop="fileSource" label="厂商" />
       <el-table-column prop="shutterSpeedValue" label="快门速度" />
-      <el-table-column label="操作">
+      <el-table-column label="操作" width="300">
         <template v-slot="{ row }">
           <el-button type="danger" size="small" @click="handleDelete(row)">删除</el-button>
+          <el-button v-if="isPreview(row)" type="primary" size="small" @click="handlePreview(row)">预览</el-button>
           <el-button v-if="row.folder !== 1" type="primary" size="small" @click="handleDown(row)">下载</el-button>
           <el-button v-if="row.folder !== 1" @click="handleFileArchives(row)">归档</el-button>
         </template>
@@ -161,5 +227,12 @@ onMounted(() => {
 .dirpath_container {
   padding: 10px 20px 10px 0;
   // border: 1px solid #ebe;
+}
+
+.text_url {
+  height: 50px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
 </style>

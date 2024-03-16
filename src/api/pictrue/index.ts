@@ -36,3 +36,10 @@ export function fileArchives(data: any) {
     data
   })
 }
+export function fileSee(data: any) {
+  return request({
+    url: "/file/see",
+    method: "post",
+    data
+  })
+}
