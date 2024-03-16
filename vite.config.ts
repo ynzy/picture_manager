@@ -6,7 +6,7 @@ import vue from "@vitejs/plugin-vue"
 import vueJsx from "@vitejs/plugin-vue-jsx"
 import { createSvgIconsPlugin } from "vite-plugin-svg-icons"
 import svgLoader from "vite-svg-loader"
-import UnoCSS from "unocss/vite"
+// import UnoCSS from "unocss/vite"
 
 /** 配置项文档：https://cn.vitejs.dev/config */
 export default (configEnv: ConfigEnv): UserConfigExport => {
@@ -35,7 +35,7 @@ export default (configEnv: ConfigEnv): UserConfigExport => {
       /** 接口代理 */
       proxy: {
         "/api/v1": {
-          target: "http://127.0.0.1:4523/m1/4164530-0-default",
+          target: "http://18501063110.gnway.cc:80",
           ws: true,
           /** 是否允许跨域 */
           changeOrigin: true,
@@ -91,9 +91,9 @@ export default (configEnv: ConfigEnv): UserConfigExport => {
       createSvgIconsPlugin({
         iconDirs: [path.resolve(process.cwd(), "src/icons/svg")],
         symbolId: "icon-[dir]-[name]"
-      }),
+      })
       /** UnoCSS */
-      UnoCSS()
+      // UnoCSS()
     ],
     /** Vitest 单元测试配置：https://cn.vitest.dev/config */
     test: {
