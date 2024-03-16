@@ -50,7 +50,7 @@ const handleRowDblclick = (row: any) => {
   console.log(row)
   if (row.folder === 1) {
     params.value.parentId = row.id
-    dirIdPath.value.push(params.value.parentId)
+    dirIdPath.value.push(row.parentId)
     getList()
   }
 }
@@ -148,7 +148,7 @@ const handlePreviewUrl = (url) => {
 
 onMounted(() => {
   // console.log(useUser.userInfo)
-  dirIdPath.value.push(params.value.parentId)
+  // dirIdPath.value.push(params.value.parentId)
   params.value.userid = useUser.userInfo.id
   getList()
 })
@@ -178,7 +178,7 @@ onMounted(() => {
       </el-form>
     </el-card>
     <div class="dirpath_container">
-      <el-button @click="handleBackPath">返回上一级</el-button>
+      <el-button @click="handleBackPath" v-if="dirIdPath.length">返回上一级</el-button>
       <el-button @click="addUpload">上传文件</el-button>
       <el-button @click="addDir">新建文件夹</el-button>
 
